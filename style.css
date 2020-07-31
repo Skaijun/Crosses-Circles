@@ -1,0 +1,40 @@
+body {
+      box-sizing: border-box;
+      background-color: cadetblue;
+      padding: 10px;
+}
+
+#app-wrap {
+      width: 350px;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 auto;
+      margin-top: 150px;
+}
+
+.square {
+      height: 100px;
+      width: 100px;
+      margin: 5px;
+      background-color: beige;
+      position: relative;
+      transition: all 0.5s ease-in-out;
+}
+
+.square.victory {
+      background-color: rgb(57, 243, 0);
+}
+
+.square:hover {
+      cursor: pointer;
+      background-color: darkkhaki;
+}
+
+.square i::before {
+      position: absolute;
+      top: 43%;
+      left: 50%;
+      transform: translateY(-40%);
+      transform: translateX(-40%);
+      color: rgb(226, 71, 44);
+}
