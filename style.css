@@ -12,6 +12,30 @@ body {
       margin-top: 150px;
 }
 
+.reload_wrap {
+  display: flex;
+  justify-content: center;
+  margin-right: 20px;
+  margin-top: 10px;
+}
+
+#reload {  
+  padding: 10px 20px;
+  background-color: tomato;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease-in;
+  opacity: .9;
+}
+
+#reload:hover {
+  cursor: pointer;  
+  box-shadow: 0 0 10px rgba(0,0,1,0.5);
+}
+
 .square {
       height: 100px;
       width: 100px;

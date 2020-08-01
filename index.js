@@ -2,6 +2,7 @@ class App {
   constructor(selectedHtmlElement) {
     this.selectedHtmlElement = selectedHtmlElement || document.body;
     this.renderDOM();
+    this.resetEvent = this.resetEvent.bind(this);
     this.squareClickEvent = this.squareClickEvent.bind(this);
     this.eventsHandler();
     this.fields = {
@@ -29,10 +30,12 @@ class App {
       outputDOM += `<div class='square' data-index="${i}"></div>`;
     }
     $(this.selectedHtmlElement).html(outputDOM);
+    this.reloadBtn = $("#reload")[0];
   }
 
   eventsHandler() {
     this.selectedHtmlElement.addEventListener("click", this.squareClickEvent);
+    this.reloadBtn.addEventListener("click", this.resetEvent);
   }
 
   squareClickEvent() {
@@ -59,10 +62,6 @@ class App {
   }
 
   checkForWin(whoseTurn, arr) {
-    if (this.fields.occupied.length === 9) {
-      return alert("Вead heat!!!!!!");
-    }
-
     this.fields.winCombo.forEach((winArr, i) => {
       if (winArr.every((key) => this.fields[arr].includes(key))) {
         this.isGameFinished = true;
@@ -75,6 +74,10 @@ class App {
         alert(`${whoseTurn} player won!!`);
       }, 600);
     }
+
+    if (!this.isGameFinished && this.fields.occupied.length === 9) {
+      return alert("Вead heat!!!!!!");
+    }
   }
 
   markVictoryFields(arr) {
@@ -82,6 +85,15 @@ class App {
       let el = $("div").find(`[data-index="${number}"]`);
       el.addClass("victory");
     });
+  }
+
+  resetEvent() {
+    this.renderDOM();
+    this.fields.circles = [];
+    this.fields.crosses = [];
+    this.fields.occupied = [];
+    this.moveFor = "Cross";
+    this.isGameFinished = false;
   }
 }
 
