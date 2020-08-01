@@ -3,6 +3,7 @@ class App {
     this.selectedHtmlElement = selectedHtmlElement || document.body;
     this.renderDOM();
     this.resetEvent = this.resetEvent.bind(this);
+    this.changeGameMode = this.changeGameMode.bind(this);
     this.squareClickEvent = this.squareClickEvent.bind(this);
     this.eventsHandler();
     this.fields = {
@@ -22,6 +23,7 @@ class App {
     };
     this.moveFor = "Cross";
     this.isGameFinished = false;
+    this.isGameModePvC = true;
   }
 
   renderDOM() {
@@ -31,11 +33,13 @@ class App {
     }
     $(this.selectedHtmlElement).html(outputDOM);
     this.reloadBtn = $("#reload")[0];
+    this.modeChangeBtn = $("#game-mode")[0];
   }
 
   eventsHandler() {
     this.selectedHtmlElement.addEventListener("click", this.squareClickEvent);
     this.reloadBtn.addEventListener("click", this.resetEvent);
+    this.modeChangeBtn.addEventListener("click", this.changeGameMode);
   }
 
   squareClickEvent() {
@@ -45,20 +49,46 @@ class App {
       (fieldIndex) => fieldIndex === elIndex
     );
     if (el.hasClass("square") && !isFieldOccupied && !this.isGameFinished) {
-      if (this.moveFor === "Circle") {
+      if (this.moveFor === "Cross") {
+        el.html('<i class="fas fa-times"></i>');
+        this.fields.crosses.push(elIndex);
+        this.fields.occupied.push(elIndex);
+        this.checkForWin("Cross", "crosses");
+        if (
+          !this.isGameFinished &&
+          this.fields.occupied.length < 9 &&
+          this.isGameModePvC
+        ) {
+          this.moveFor = "Circle";
+          this.botMoveForCircles();
+        } else {
+          this.moveFor = "Circle";
+        }
+      } else {
         el.html('<i class="far fa-circle"></i>');
         this.fields.circles.push(elIndex);
         this.fields.occupied.push(elIndex);
         this.checkForWin("Circle", "circles");
         this.moveFor = "Cross";
-      } else {
-        el.html('<i class="fas fa-times"></i>');
-        this.fields.crosses.push(elIndex);
-        this.fields.occupied.push(elIndex);
-        this.checkForWin("Cross", "crosses");
-        this.moveFor = "Circle";
       }
     }
+  }
+
+  botMoveForCircles() {
+    let cirleMoveField = null;
+
+    do {
+      cirleMoveField = Math.floor(Math.random() * 9) + 1;
+    } while (this.fields.occupied.includes(cirleMoveField));
+
+    setTimeout(() => {
+      let el = $("div").find(`[data-index="${cirleMoveField}"]`);
+      el.html('<i class="far fa-circle"></i>');
+      this.fields.circles.push(cirleMoveField);
+      this.fields.occupied.push(cirleMoveField);
+      this.checkForWin("Circle", "circles");
+      this.moveFor = "Cross";
+    }, 1000);
   }
 
   checkForWin(whoseTurn, arr) {
@@ -94,6 +124,15 @@ class App {
     this.fields.occupied = [];
     this.moveFor = "Cross";
     this.isGameFinished = false;
+  }
+
+  changeGameMode() {
+    this.isGameModePvC = !this.isGameModePvC;
+    if (this.isGameModePvC) {
+      $("#game-mode-pick").html("Mode: Player versus Computer");
+    } else {
+      $("#game-mode-pick").html("Mode: Player versus Player");
+    }
   }
 }
 
