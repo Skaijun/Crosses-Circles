@@ -64,7 +64,7 @@ class App {
         } else {
           this.moveFor = "Circle";
         }
-      } else {
+      } else if (this.moveFor === "Circle" && !this.isGameModePvC) {
         el.html('<i class="far fa-circle"></i>');
         this.fields.circles.push(elIndex);
         this.fields.occupied.push(elIndex);
